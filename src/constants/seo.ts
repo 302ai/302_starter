@@ -1,32 +1,17 @@
-export type SEOData = {
-  supportLanguages: string[];
-  fallbackLanguage: string;
-  languages: Record<
-    string,
-    { title: string; description: string; image: string }
-  >;
-};
-
-export const SEO_DATA: SEOData = {
-  // TODO: Change to your own support languages
-  supportLanguages: ["zh", "en", "ja"],
-  fallbackLanguage: "en",
-  // TODO: Change to your own SEO data
-  languages: {
-    zh: {
-      title: "AI 播客制作",
-      description: "将任意素材转为有意思的播客",
-      image: "/images/global/desc_zh.png",
-    },
-    en: {
-      title: "AI Podcast Production",
-      description: "Turn any material into an interesting podcast",
-      image: "/images/global/desc_en.png",
-    },
-    ja: {
-      title: "AIポッドキャスト制作",
-      description: "あらゆる素材を興味深いポッドキャストに変える",
-      image: "/images/global/desc_ja.png",
-    },
+export const SEO_DATA = {
+  en: {
+    title: '302 Starter',
+    description: 'A comprehensive Next.js starter template with essential architectures',
+    keywords: 'Next.js, React, TypeScript, Authentication, Internationalization',
   },
-};
+  es: {
+    title: '302 Starter',
+    description: 'Una plantilla inicial completa de Next.js con arquitecturas esenciales',
+    keywords: 'Next.js, React, TypeScript, Autenticación, Internacionalización',
+  },
+  zh: {
+    title: '302 起步模板',
+    description: '一个包含基本架构的完整 Next.js 起步模板',
+    keywords: 'Next.js, React, TypeScript, 认证, 国际化',
+  },
+} as const;

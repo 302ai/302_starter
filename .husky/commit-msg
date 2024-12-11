@@ -1,1 +1,4 @@
-pnpm commitlint --config commitlint.config.mjs --edit
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+pnpm commitlint --config commitlint.config.mjs --edit $1

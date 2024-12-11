@@ -1,21 +1,25 @@
-"use client";
-import { env } from "@/env";
-import { languageAtom, store } from "@/stores";
-import { langToCountry } from "@/utils/302";
-import ky from "ky";
+import { signIn, signOut } from 'next-auth/react';
 
-export const authKy = ky.create({
-  prefixUrl: env.NEXT_PUBLIC_AUTH_API_URL,
-  timeout: 60000,
-  hooks: {
-    beforeRequest: [
-      (request) => {
-        // Some 302 endpoints require the language to be set, so we set it here
-        const uiLanguage = store.get(languageAtom);
-        if (uiLanguage) {
-          request.headers.set("Lang", langToCountry(uiLanguage));
-        }
-      },
-    ],
+export interface LoginCredentials {
+  email: string;
+  password: string;
+}
+
+export const authApi = {
+  login: async (credentials: LoginCredentials) => {
+    const result = await signIn('credentials', {
+      ...credentials,
+      redirect: false,
+    });
+
+    if (result?.error) {
+      throw new Error(result.error);
+    }
+
+    return result;
   },
-});
+
+  logout: async () => {
+    await signOut({ redirect: false });
+  },
+};

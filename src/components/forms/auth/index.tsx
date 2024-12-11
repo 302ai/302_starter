@@ -1,73 +1,77 @@
-"use client";
+'use client';
 
-import { FormEvent } from "react";
+import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { signIn } from 'next-auth/react';
 
-import FormGenerator from "@/components/common/form-generator";
-import { LoaderRenderer } from "@/components/common/loader-renderer";
-import { Button } from "@/components/ui/button";
-import { FORM_CONSTANTS } from "@/constants";
-import useAuth from "@/hooks/auth";
-import { Loader2 } from "lucide-react";
-import { useTranslations } from "next-intl";
+export const SignInForm = () => {
+  const router = useRouter();
+  const [error, setError] = useState<string>('');
+  const [loading, setLoading] = useState(false);
 
-const SignInForm = () => {
-  const t = useTranslations();
-  const { isPending, setValue, onAuth, watch, register, errors } = useAuth();
-
-  const handleSubmit = (event: FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    onAuth();
+    setError('');
+    setLoading(true);
+
+    const formData = new FormData(event.currentTarget);
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
+
+    try {
+      const result = await signIn('credentials', {
+        email,
+        password,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        setError('Invalid credentials');
+      } else {
+        router.push('/dashboard');
+        router.refresh();
+      }
+    } catch (err) {
+      setError('An error occurred during sign in');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <form
-      className="mt-4 flex w-full max-w-sm flex-col items-center gap-3"
-      onSubmit={handleSubmit}
-    >
-      {FORM_CONSTANTS.signInForm.slice(0, 1).map((field) => {
-        return (
-          <FormGenerator
-            {...field}
-            id={field.id}
-            key={field.id}
-            label={field.label && t(field.label)}
-            placeholder={t(field.placeholder ?? "")}
-            watch={watch}
-            register={register}
-            setValue={setValue}
-            errors={errors}
-            className="w-[220px] text-center"
-          />
-        );
-      })}
-      <Button type="submit" className="w-[220px] cursor-pointer rounded-md">
-        <LoaderRenderer
-          status={isPending ? "loading" : "default"}
-          statuses={{
-            default: { icon: null, text: t("auth.form.confirm_button") },
-            loading: {
-              icon: <Loader2 className="h-4 w-4 animate-spin" />,
-              text: t("auth.form.confirm_button_loading"),
-            },
-          }}
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div>
+        <label htmlFor="email" className="block text-sm font-medium">
+          Email
+        </label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          required
+          className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2"
         />
-      </Button>
-      {FORM_CONSTANTS.signInForm.slice(1).map((field) => (
-        <FormGenerator
-          {...field}
-          id={field.id}
-          label={t(field.label || "")}
-          placeholder={t(field.placeholder || "")}
-          key={field.id}
-          watch={watch}
-          register={register}
-          setValue={setValue}
-          errors={errors}
-          className="w-[220px] text-center"
+      </div>
+      <div>
+        <label htmlFor="password" className="block text-sm font-medium">
+          Password
+        </label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          required
+          className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2"
         />
-      ))}
+      </div>
+      {error && <div className="text-red-500 text-sm">{error}</div>}
+      <button
+        type="submit"
+        disabled={loading}
+        className="w-full rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 disabled:opacity-50"
+      >
+        {loading ? 'Signing in...' : 'Sign In'}
+      </button>
     </form>
   );
 };
-
-export default SignInForm;

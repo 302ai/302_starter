@@ -1,0 +1,31 @@
+{
+  "common": {
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito"
+  },
+  "auth": {
+    "signIn": "Iniciar Sesión",
+    "signOut": "Cerrar Sesión",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "invalidCredentials": "Credenciales inválidas"
+  },
+  "nav": {
+    "home": "Inicio",
+    "dashboard": "Panel",
+    "profile": "Perfil"
+  },
+  "theme": {
+    "toggle": "Cambiar tema",
+    "light": "Claro",
+    "dark": "Oscuro",
+    "system": "Sistema"
+  },
+  "language": {
+    "select": "Seleccionar idioma",
+    "en": "Inglés",
+    "es": "Español",
+    "zh": "Chino"
+  }
+}

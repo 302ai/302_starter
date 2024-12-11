@@ -1,20 +1,23 @@
-"use client";
+'use client';
 
-import { ReactNode } from "react";
+import React, { useEffect, useState } from 'react';
+import { ThemeProvider } from 'next-themes';
 
-import { ThemeProvider as NextThemesProvider } from "next-themes";
+export const AppTheme: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [mounted, setMounted] = useState(false);
 
-type AppThemeProps = {
-  children: ReactNode;
-  theme: string;
-};
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
-const AppTheme = ({ children, theme }: AppThemeProps) => {
   return (
-    <NextThemesProvider defaultTheme={theme} attribute="class">
-      {children}
-    </NextThemesProvider>
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="system"
+      enableSystem={true}
+      themes={['light', 'dark']}
+    >
+      {mounted ? children : null}
+    </ThemeProvider>
   );
 };
-
-export default AppTheme;
