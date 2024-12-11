@@ -1,10 +1,8 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { getServerSession } from 'next-auth';
-import { SessionProvider } from 'next-auth/react';
-import { AppTheme } from '@/components/global/app-theme';
-import { StoreProvider } from '@/stores';
-import { ErrorBoundary } from '@/components/global/error-boundary';
+import { Providers } from '@/components/global/providers';
+import { Header } from '@/components/global/header';
 import './globals.css';
 
 const geistSans = Geist({
@@ -32,13 +30,10 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <ErrorBoundary>
-          <StoreProvider>
-            <SessionProvider session={session}>
-              <AppTheme>{children}</AppTheme>
-            </SessionProvider>
-          </StoreProvider>
-        </ErrorBoundary>
+        <Providers session={session}>
+          <Header />
+          {children}
+        </Providers>
       </body>
     </html>
   );

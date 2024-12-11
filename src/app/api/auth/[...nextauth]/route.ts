@@ -12,7 +12,7 @@ const authOptions: AuthOptions = {
       },
       async authorize(credentials) {
         const parsedCredentials = z
-          .object({ email: z.string().email(), password: z.string().min(6) })
+          .object({ email: z.string().email(), password: z.string().min(4) }) // Changed min length to 4
           .safeParse(credentials);
 
         if (!parsedCredentials.success) {

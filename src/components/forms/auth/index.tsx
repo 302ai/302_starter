@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { authApi } from '@/api/auth';
+import { signIn } from 'next-auth/react';
 
 export const SignInForm = () => {
   const router = useRouter();
@@ -19,10 +19,20 @@ export const SignInForm = () => {
     const password = formData.get('password') as string;
 
     try {
-      await authApi.login({ email, password });
-      router.push('/dashboard');
+      const result = await signIn('credentials', {
+        email,
+        password,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        setError('Invalid credentials');
+      } else {
+        router.push('/dashboard');
+        router.refresh();
+      }
     } catch (err) {
-      setError('Invalid credentials');
+      setError('An error occurred during sign in');
     } finally {
       setLoading(false);
     }
