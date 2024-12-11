@@ -10,5 +10,6 @@
     "import/named": "off",
     "import/default": "off",
     "import/namespace": "off"
-  }
+  },
+  "ignorePatterns": ["dist/**/*", ".next/**/*", "node_modules/**/*"]
 }
