@@ -5,11 +5,11 @@ import { useConfig } from '@/hooks/global/use-config';
 import { useUser } from '@/hooks/global/use-user';
 
 export const StateDemo: React.FC = () => {
-  const { config, setConfig } = useConfig();
+  const { config, updateConfig } = useConfig();
   const { user, updateUser } = useUser();
 
   const toggleNav = () => {
-    setConfig((prev) => ({ ...prev, isNavOpen: !prev.isNavOpen }));
+    updateConfig({ isNavOpen: !config.isNavOpen });
   };
 
   const updateUserName = () => {

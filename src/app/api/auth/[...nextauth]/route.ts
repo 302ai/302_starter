@@ -1,11 +1,11 @@
-import NextAuth from 'next-auth';
+import NextAuth, { AuthOptions, SessionStrategy } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { z } from 'zod';
 import { createScopedLogger } from '../../../../utils/logger';
 
 const logger = createScopedLogger('auth-api');
 
-const authOptions = {
+const authOptions: AuthOptions = {
   providers: [
     CredentialsProvider({
       name: 'Credentials',
@@ -50,7 +50,7 @@ const authOptions = {
     signIn: '/auth/signin',
   },
   session: {
-    strategy: 'jwt',
+    strategy: 'jwt' as SessionStrategy,
   },
 };
 
