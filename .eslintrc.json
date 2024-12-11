@@ -1,10 +1,15 @@
 {
-  "extends": ["next/core-web-vitals", "next/typescript", "prettier"],
+  "extends": ["next/core-web-vitals", "plugin:@typescript-eslint/recommended", "prettier"],
+  "plugins": ["@typescript-eslint"],
   "rules": {
-    "@typescript-eslint/no-explicit-any": "off",
-    "@typescript-eslint/no-empty-object-type": "off",
-    "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
-    "no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
-    "camelcase": ["error", { "allow": ["^_"] }]
-  }
+    "@typescript-eslint/no-unused-vars": "error",
+    "@typescript-eslint/no-explicit-any": "error",
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "import/no-unresolved": "off",
+    "import/named": "off",
+    "import/default": "off",
+    "import/namespace": "off"
+  },
+  "ignorePatterns": ["dist/**/*", ".next/**/*", "node_modules/**/*"]
 }

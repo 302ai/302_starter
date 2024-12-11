@@ -1,158 +1,157 @@
-# 302 Starter 🚀
+# 302 Starter - Next.js Enterprise Boilerplate
 
-English | [简体中文](./README_zh.md) | [日本語](./README_ja.md)
+A comprehensive Next.js starter project featuring essential enterprise-grade architectures and integrations. Built with modern best practices and a focus on developer experience.
 
-A modern web application starter template based on Next.js 14, integrating the latest frontend technology stack and best practices.
+## Features
 
-## ✨ About 302.AI ✨
-[302.AI](https://302.ai) is a pay-as-you-go AI application platform, bridging the gap between AI capabilities and practical implementation.
-1. 🧠 Comprehensive AI capabilities: Incorporates the latest in language, image, audio, and video models from leading AI brands.
-2. 🚀 Advanced application development: We build genuine AI products, not just simple chatbots.
-3. 💰 No monthly fees: All features are pay-per-use, fully accessible, ensuring low entry barriers with high potential.
-4. 🛠 Powerful admin dashboard: Designed for teams and SMEs - managed by one, used by many.
-5. 🔗 API access for all AI features: All tools are open-source and customizable (in progress).
-6. 💡 Powerful development team: Launching 2-3 new applications weekly with daily product updates. Interested developers are welcome to contact us.
+### 🔐 Authentication
 
-## 📖 Project Introduction
+- NextAuth.js integration with credentials provider
+- Protected routes and middleware
+- Type-safe authentication hooks
+- Persistent session management
 
-This is a feature-rich Next.js starter template that adopts the App Router architecture and integrates multiple practical features such as 302AI authentication, internationalization, theme switching, and form handling. The project is developed using TypeScript, ensuring code type safety and maintainability.
+### 🎨 Theme Management
 
-## 📁 Project Structure
+- Dark/Light mode support
+- System preference detection
+- Persistent theme settings
+- Tailwind CSS integration
 
-```
-src/
-├── actions/      # Server actions
-├── api/          # API routes
-├── app/          # Next.js app router
-├── components/   # React components
-├── constants/    # Constants
-├── hooks/        # Custom React Hooks
-├── i18n/         # Internationalization
-├── lib/          # Libraries
-├── services/     # Services
-├── stores/       # State management
-├── styles/       # Styles
-└── utils/        # Utilities
-```
+### 🌐 Internationalization (i18n)
 
-## 🛠️ Tech Stack
+- Multi-language support (en, es, zh)
+- Dynamic language switching
+- SEO-friendly URLs with language prefixes
+- Automatic language detection
+- Type-safe translations
 
-- **Framework**: Next.js 14
-- **Language**: TypeScript
-- **Styling**: TailwindCSS
-- **UI Components**: Radix UI
-- **State Management**: Jotai
-- **Form Handling**: React Hook Form
-- **HTTP Client**: ky
-- **i18n**: next-intl
-- **Theming**: next-themes
-- **Code Standards**: ESLint, Prettier
-- **Commit Standards**: Husky, Commitlint
+### 📊 State Management
 
-## 🚀 Installation & Setup
+- Jotai for atomic state management
+- Persistent storage integration
+- Type-safe state hooks
+- Centralized store organization
 
-### ⚙️ Requirements
+### 📝 Logging
 
-- Node.js 18.17 or higher
-- pnpm 8.0 or higher
+- Scoped logger utility
+- Development/Production modes
+- Error boundary integration
+- Console formatting
 
-### 📥 Installation Steps
+### 🔧 Development Tools
 
-1. Clone the project
+- ESLint configuration for TypeScript and React
+- Prettier code formatting
+- Husky pre-commit hooks
+- lint-staged for staged files
+- Commitlint for conventional commits
+
+### 🐳 Docker Support
+
+- Multi-stage build optimization
+- Production-ready configuration
+- Security best practices
+- Environment variable management
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 20.x or later
+- pnpm (recommended) or npm
+- Docker (optional, for containerization)
+
+### Installation
+
+1. Clone the repository:
+
 ```bash
-git clone [repository-url]
+git clone <repository-url>
 cd 302-starter
 ```
 
-2. Install dependencies
+2. Install dependencies:
+
 ```bash
 pnpm install
 ```
 
-3. Configure environment
+3. Create environment variables:
+
 ```bash
 cp .env.example .env.local
 ```
-Modify the environment variables in `.env.local` as needed.
 
-4. Start development server
+4. Start the development server:
+
 ```bash
 pnpm dev
 ```
 
-5. Build for production
+### Docker Deployment
+
+1. Build the Docker image:
+
 ```bash
-pnpm build
-pnpm start
+docker build -t 302-starter .
 ```
 
-## ✨ Key Features
+2. Run the container:
 
-- 🔐 302AI Authentication
-- 🌐 Internationalization
-- 🎨 Light/Dark Theme
-- 📝 Form Validation
-- 🔒 Type-safe API Calls
-- 📦 Modular Components
-- 🚀 Optimized Build
-- 🔧 Complete Development Toolchain
-
-## 📐 Code Standards
-
-The project uses ESLint and Prettier for code formatting and standards:
-
-- ✅ ESLint: Code quality
-- 🎨 Prettier: Code formatting
-- 🔄 Husky: Git hooks
-- 📝 Commitlint: Commit message standards
-
-Run code check:
 ```bash
-pnpm lint
+docker run -p 3000:3000 302-starter
 ```
 
-## 🤝 Contributing
-
-1. Fork the project
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-### 📝 Commit Convention
-
-The project follows [Conventional Commits](https://www.conventionalcommits.org/), with the following format:
+## Project Structure
 
 ```
-type(scope): description
-
-[optional body]
-
-[optional footer]
+src/
+├── api/            # API routes and client configurations
+├── app/            # Next.js 13+ app directory
+├── components/     # Reusable UI components
+│   ├── forms/      # Form components
+│   └── global/     # Global components (theme, i18n)
+├── constants/      # Application constants
+├── hooks/          # Custom React hooks
+│   ├── auth/       # Authentication hooks
+│   └── global/     # Global utility hooks
+├── i18n/           # Internationalization utilities
+│   └── messages/   # Translation files
+├── stores/         # State management
+│   └── slices/     # Store slices (config, user, language)
+└── utils/          # Utility functions
 ```
 
-Common types:
-- ✨ feat: New features
-- 🐛 fix: Bug fixes
-- 📚 docs: Documentation
-- 💄 style: Code style
-- ♻️ refactor: Code refactoring
-- ✅ test: Testing
-- 🔧 chore: Build process or tools
+## Available Scripts
 
-## ❓ FAQ
+- `pnpm dev`: Start development server
+- `pnpm build`: Build production application
+- `pnpm start`: Start production server
+- `pnpm lint`: Run ESLint
+- `pnpm lint:fix`: Fix ESLint errors
+- `pnpm format`: Format code with Prettier
+- `pnpm format:check`: Check code formatting
 
-### Q: How to add new language support?
-A: Add translation files in the `messages` directory and configure in `constants/values.ts`.
+## Environment Variables
 
-### Q: How to customize themes?
-A: Modify theme configuration in `tailwind.config.ts`.
+Required environment variables:
 
-## 💬 Support
+```
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=your-secret-key
+```
 
-- 🐛 Submit Issues
-- 📧 Contact Maintenance Team
+See `.env.example` for all available options.
 
-## 📄 License
+## Contributing
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+1. Create a feature branch
+2. Commit changes following conventional commits
+3. Push to the branch
+4. Open a pull request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.

@@ -1,123 +1,78 @@
-import { env } from "@/env";
+'use client';
 
-export type DebugLevel = "trace" | "debug" | "info" | "warn" | "error";
+type LogLevel = 'debug' | 'info' | 'warn' | 'error';
 
-type LoggerFunction = (...messages: any[]) => void;
+interface LogOptions {
+  level?: LogLevel;
+  scope?: string;
+  data?: Record<string, unknown>;
+}
 
 interface Logger {
-  trace: LoggerFunction;
-  debug: LoggerFunction;
-  info: LoggerFunction;
-  warn: LoggerFunction;
-  error: LoggerFunction;
-  setLevel: (level: DebugLevel) => void;
+  debug: (message: string, data?: Record<string, unknown>) => void;
+  info: (message: string, data?: Record<string, unknown>) => void;
+  warn: (message: string, data?: Record<string, unknown>) => void;
+  error: (message: string, error?: Error | unknown, data?: Record<string, unknown>) => void;
 }
 
-let currentLevel: DebugLevel =
-  env.NEXT_PUBLIC_LOG_LEVEL ??
-  (env.NODE_ENV === "production" ? "info" : "debug");
-
-const isWorker = "HTMLRewriter" in globalThis;
-const supportsColor = !isWorker;
-
-export const logger: Logger = {
-  trace: (...messages: any[]) => log("trace", undefined, messages),
-  debug: (...messages: any[]) => log("debug", undefined, messages),
-  info: (...messages: any[]) => log("info", undefined, messages),
-  warn: (...messages: any[]) => log("warn", undefined, messages),
-  error: (...messages: any[]) => log("error", undefined, messages),
-  setLevel,
+const LOG_LEVELS: Record<LogLevel, number> = {
+  debug: 0,
+  info: 1,
+  warn: 2,
+  error: 3,
 };
 
-export function createScopedLogger(scope: string): Logger {
-  return {
-    trace: (...messages: any[]) => log("trace", scope, messages),
-    debug: (...messages: any[]) => log("debug", scope, messages),
-    info: (...messages: any[]) => log("info", scope, messages),
-    warn: (...messages: any[]) => log("warn", scope, messages),
-    error: (...messages: any[]) => log("error", scope, messages),
-    setLevel,
+const getCurrentLogLevel = (): LogLevel => {
+  return process.env.NODE_ENV === 'production' ? 'info' : 'debug';
+};
+
+const formatMessage = (message: string, options: LogOptions): string => {
+  const timestamp = new Date().toISOString();
+  const scope = options.scope ? `[${options.scope}]` : '';
+  return `${timestamp} ${options.level?.toUpperCase()} ${scope} ${message}`;
+};
+
+const shouldLog = (level: LogLevel): boolean => {
+  const currentLevel = getCurrentLogLevel();
+  return LOG_LEVELS[level] >= LOG_LEVELS[currentLevel];
+};
+
+export const createScopedLogger = (scope: string): Logger => {
+  const log = (message: string, options: LogOptions) => {
+    if (!shouldLog(options.level || 'info')) return;
+
+    const formattedMessage = formatMessage(message, { ...options, scope });
+    const logData = options.data ? { data: options.data } : {};
+
+    switch (options.level) {
+      case 'debug':
+        console.debug(formattedMessage, logData);
+        break;
+      case 'warn':
+        console.warn(formattedMessage, logData);
+        break;
+      case 'error':
+        console.error(formattedMessage, logData);
+        break;
+      default:
+        console.info(formattedMessage, logData);
+    }
   };
-}
 
-function setLevel(level: DebugLevel) {
-  if (
-    (level === "trace" || level === "debug") &&
-    env.NODE_ENV === "production"
-  ) {
-    return;
-  }
+  return {
+    debug: (message: string, data?: Record<string, unknown>) =>
+      log(message, { level: 'debug', data }),
+    info: (message: string, data?: Record<string, unknown>) =>
+      log(message, { level: 'info', data }),
+    warn: (message: string, data?: Record<string, unknown>) =>
+      log(message, { level: 'warn', data }),
+    error: (message: string, error?: Error | unknown, data?: Record<string, unknown>) =>
+      log(message, {
+        level: 'error',
+        data: { ...data, error: error instanceof Error ? error.message : error },
+      }),
+  };
+};
 
-  currentLevel = level;
-}
-
-function log(level: DebugLevel, scope: string | undefined, messages: any[]) {
-  const levelOrder: DebugLevel[] = ["trace", "debug", "info", "warn", "error"];
-
-  if (levelOrder.indexOf(level) < levelOrder.indexOf(currentLevel)) {
-    return;
-  }
-
-  const allMessages = messages.reduce((acc, current) => {
-    if (acc.endsWith("\n")) {
-      return acc + current;
-    }
-
-    if (!acc) {
-      return current;
-    }
-
-    return `${acc} ${current}`;
-  }, "");
-
-  if (!supportsColor) {
-    console.log(`[${level.toUpperCase()}]`, allMessages);
-
-    return;
-  }
-
-  const labelBackgroundColor = getColorForLevel(level);
-  const labelTextColor = level === "warn" ? "black" : "white";
-
-  const labelStyles = getLabelStyles(labelBackgroundColor, labelTextColor);
-  const scopeStyles = getLabelStyles("#77828D", "white");
-
-  const styles = [labelStyles];
-
-  if (typeof scope === "string") {
-    styles.push("", scopeStyles);
-  }
-
-  console.log(
-    `%c${level.toUpperCase()}${scope ? `%c %c${scope}` : ""}`,
-    ...styles,
-    allMessages
-  );
-}
-
-function getLabelStyles(color: string, textColor: string) {
-  return `background-color: ${color}; color: white; border: 4px solid ${color}; color: ${textColor};`;
-}
-
-function getColorForLevel(level: DebugLevel): string {
-  switch (level) {
-    case "trace":
-    case "debug": {
-      return "#77828D";
-    }
-    case "info": {
-      return "#1389FD";
-    }
-    case "warn": {
-      return "#FFDB6C";
-    }
-    case "error": {
-      return "#EE4744";
-    }
-    default: {
-      return "black";
-    }
-  }
-}
-
-export const renderLogger = createScopedLogger("Render");
+// Create default logger
+export const logger = createScopedLogger('app');

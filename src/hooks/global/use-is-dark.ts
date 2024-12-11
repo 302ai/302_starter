@@ -1,16 +1,23 @@
-"use client";
+'use client';
 
-import { useTheme } from "next-themes";
+import { useTheme } from 'next-themes';
+import { useEffect, useState } from 'react';
 
-// Detect if the system is dark or light, if the theme is system, it will return the system's dark mode
-export function useIsDark() {
-  const { theme } = useTheme();
-  if (theme === "system") {
-    return {
-      isDark: window.matchMedia("(prefers-color-scheme: dark)").matches,
-    };
-  }
-  return {
-    isDark: theme === "dark",
-  };
-}
+export const useIsDark = () => {
+  const { theme, setTheme } = useTheme();
+  const [isDark, setIsDark] = useState(
+    typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches
+  );
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    setIsDark(
+      theme === 'dark' ||
+        (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)
+    );
+  }, [theme]);
+
+  const toggleTheme = () => setTheme(isDark ? 'light' : 'dark');
+
+  return { isDark, toggleTheme };
+};
