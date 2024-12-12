@@ -25,6 +25,22 @@ import { isAuthPath, removeParams } from "@/utils/path";
 import { useSetAtom } from "jotai";
 import { useTranslations } from "next-intl";
 
+const MAX_ATTEMPTS = 5;
+const LOCKOUT_TIME = 15 * 60 * 1000;
+
+const attempts = new Map<string, number>();
+const lockouts = new Map<string, number>();
+
+const cleanupLockouts = () => {
+  const now = Date.now();
+  for (const [ip, lockoutTime] of lockouts.entries()) {
+    if (now - lockoutTime >= LOCKOUT_TIME) {
+      lockouts.delete(ip);
+      attempts.delete(ip);
+    }
+  }
+};
+
 // Define the schema using Zod for form validation
 const schema = z.object({
   code: z.string().optional(),
@@ -85,12 +101,27 @@ const useAuth = () => {
       try {
         setIsPending(true);
 
-        // Call login function to validate the code
+        const clientIP = "127.0.0.1";
+
+        const lockoutTime = lockouts.get(clientIP);
+        if (lockoutTime) {
+          const now = Date.now();
+          if (now - lockoutTime < LOCKOUT_TIME) {
+            const remainingTime = Math.ceil((LOCKOUT_TIME - (now - lockoutTime)) / 60000);
+            throw new Error(`auth.error.too_many_attempts_wait_minutes|${remainingTime}`);
+          }
+          lockouts.delete(clientIP);
+          attempts.delete(clientIP);
+        }
+
+        cleanupLockouts();
+
         const result = await login(code);
+
+        attempts.delete(clientIP);
 
         logger.debug("result:", JSON.stringify(result));
 
-        // Update app configuration from the store with result
         setConfig((prev) => ({
           ...prev,
           apiKey: result.data?.apiKey,
@@ -101,7 +132,6 @@ const useAuth = () => {
           hideBrand: result.data?.hideBrand,
         }));
 
-        // Store or remove auth code based on remember flag
         if (remember) {
           localStorage.setItem(SHARE_CODE_REMEMBER_KEY, TRUE_STRING);
           localStorage.setItem(SHARE_CODE_STORE_KEY, code);
@@ -111,16 +141,25 @@ const useAuth = () => {
           localStorage.setItem(SHARE_CODE_STORE_KEY, "");
         }
 
-        // Redirect to the home page if on auth page
         if (isAuthPath(pathname)) {
           replace("/");
         } else {
           removeParams(pathname);
         }
       } catch (error: unknown) {
-        // Handle error by navigating to auth and setting error state
         replace(env.NEXT_PUBLIC_AUTH_PATH);
-        if (error instanceof Error) {
+
+        const clientIP = "127.0.0.1";
+        const currentAttempts = (attempts.get(clientIP) || 0) + 1;
+        attempts.set(clientIP, currentAttempts);
+
+        if (currentAttempts >= MAX_ATTEMPTS) {
+          lockouts.set(clientIP, Date.now());
+          setError("code", {
+            type: "server",
+            message: t("auth.error.too_many_attempts"),
+          });
+        } else if (error instanceof Error) {
           setError("code", {
             type: "server",
             message: t(error.message),
