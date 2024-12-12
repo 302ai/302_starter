@@ -1,8 +1,8 @@
 "use client";
 
 import { usePathname, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
-
+import { useCallback, useEffect } from "react";
+import { signIn, useSession } from "next-auth/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -17,7 +17,6 @@ import {
 } from "@/constants";
 import { env } from "@/env";
 import { useRouter } from "@/i18n/routing";
-import { login } from "@/services/auth";
 import { store } from "@/stores";
 import { appConfigAtom } from "@/stores/slices/config_store";
 import { logger } from "@/utils";
@@ -38,7 +37,7 @@ type AuthData = {
 };
 
 const useAuth = () => {
-  const [isPending, setIsPending] = useState(false);
+  const { data: session, status } = useSession();
   const params = useSearchParams();
   const { replace } = useRouter();
   const pathname = usePathname();
@@ -55,8 +54,8 @@ const useAuth = () => {
     formState: { errors },
   } = useForm<AuthData>({
     defaultValues: {
-      code: "", // Default code to empty string
-      remember: true, // Default remember to true
+      code: "",
+      remember: true,
     },
     resolver: zodResolver(schema),
   });
@@ -68,38 +67,59 @@ const useAuth = () => {
     const storedCode = localStorage.getItem(SHARE_CODE_STORE_KEY) || "";
     const storeRemember = localStorage.getItem(SHARE_CODE_REMEMBER_KEY) || "";
 
-    // Reset remember
     if (storeRemember === FALSE_STRING) {
       setValue("remember", false);
     }
 
-    // Reset code
     if (queryCode || sessionCode || storedCode) {
       setValue("code", queryCode || sessionCode || storedCode);
     }
   }, [params, setValue]);
 
-  // Function to handle authentication
+  // Update app configuration when session changes
+  useEffect(() => {
+    if (session?.user) {
+      setConfig((prev) => ({
+        ...prev,
+        apiKey: session.user.apiKey,
+        modelName: session.user.modelName,
+        isChina: session.user.region === CHINA_REGION,
+        toolInfo: session.user.info,
+        shareCode:
+          session.user.authType === "share_code" ? session.user.id : "",
+        hideBrand: session.user.hideBrand,
+      }));
+    }
+  }, [session, setConfig]);
+
   const performAuth = useCallback(
     async ({ code, remember }: AuthData) => {
       try {
-        setIsPending(true);
+        const hostname =
+          env.NEXT_PUBLIC_DEV_HOST_NAME || window.location.host.split(".")[0];
 
-        // Call login function to validate the code
-        const result = await login(code);
+        // Try API Key authentication first if available
+        if (env.API_KEY) {
+          const result = await signIn("apikey", {
+            apiKey: env.API_KEY,
+            redirect: false,
+          });
 
-        logger.debug("result:", JSON.stringify(result));
+          if (result?.error) {
+            throw new Error(result.error);
+          }
+        } else {
+          // Try share code authentication
+          const result = await signIn("sharecode", {
+            hostname,
+            pwd: code,
+            redirect: false,
+          });
 
-        // Update app configuration from the store with result
-        setConfig((prev) => ({
-          ...prev,
-          apiKey: result.data?.apiKey,
-          modelName: result.data?.modelName,
-          isChina: result.data?.region === CHINA_REGION,
-          toolInfo: result.data?.info,
-          shareCode: result.data?.code,
-          hideBrand: result.data?.hideBrand,
-        }));
+          if (result?.error) {
+            throw new Error(result.error);
+          }
+        }
 
         // Store or remove auth code based on remember flag
         if (remember) {
@@ -111,14 +131,14 @@ const useAuth = () => {
           localStorage.setItem(SHARE_CODE_STORE_KEY, "");
         }
 
-        // Redirect to the home page if on auth page
+        // Redirect to home if on auth page
         if (isAuthPath(pathname)) {
           replace("/");
         } else {
           removeParams(pathname);
         }
-      } catch (error: unknown) {
-        // Handle error by navigating to auth and setting error state
+      } catch (error) {
+        logger.error("Authentication error:", error);
         replace(env.NEXT_PUBLIC_AUTH_PATH);
         if (error instanceof Error) {
           setError("code", {
@@ -126,14 +146,11 @@ const useAuth = () => {
             message: t(error.message),
           });
         }
-      } finally {
-        setIsPending(false);
       }
     },
-    [t, setError, pathname, replace, setConfig]
+    [t, setError, pathname, replace]
   );
 
-  // Callback for form submission
   const onSubmit = useCallback(
     async (data: AuthData) => {
       await performAuth(data);
@@ -146,7 +163,7 @@ const useAuth = () => {
   }, [handleSubmit, onSubmit]);
 
   return {
-    isPending,
+    isPending: status === "loading",
     setValue,
     onAuth,
     watch,
