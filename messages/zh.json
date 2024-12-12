@@ -9,6 +9,25 @@
     },
     "title": "需要分享码"
   },
+  "datetime": {
+    "format": {
+      "short": "YYYY/MM/DD",
+      "long": "YYYY年MM月DD日 HH:mm",
+      "relative": {
+        "days": {
+          "today": "今天",
+          "yesterday": "昨天",
+          "tomorrow": "明天",
+          "other": "{count}天前"
+        },
+        "time": {
+          "just_now": "刚刚",
+          "minutes_ago": "{count}分钟前",
+          "hours_ago": "{count}小时前"
+        }
+      }
+    }
+  },
   "global": {
     "error": {
       "copy_failed": "复制失败",

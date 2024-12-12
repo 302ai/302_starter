@@ -9,6 +9,25 @@
     },
     "title": "Need to share code"
   },
+  "datetime": {
+    "format": {
+      "short": "MM/DD/YYYY",
+      "long": "MMMM DD, YYYY HH:mm",
+      "relative": {
+        "days": {
+          "today": "Today",
+          "yesterday": "Yesterday",
+          "tomorrow": "Tomorrow",
+          "other": "{count} days ago"
+        },
+        "time": {
+          "just_now": "Just now",
+          "minutes_ago": "{count} minutes ago",
+          "hours_ago": "{count} hours ago"
+        }
+      }
+    }
+  },
   "global": {
     "error": {
       "code_invalid": "Invalid sharing code. For more information, visit 302.AI",
