@@ -6,7 +6,7 @@ export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {}
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, ...props }, ref) => {
+  ({ className, type, "aria-label": ariaLabel, "aria-describedby": ariaDescribedby, ...props }, ref) => {
     return (
       <input
         type={type}
@@ -15,6 +15,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           className
         )}
         ref={ref}
+        aria-label={ariaLabel || props.placeholder || "Input field"}
+        aria-invalid={props["aria-invalid"] || undefined}
+        aria-describedby={ariaDescribedby}
         {...props}
       />
     );

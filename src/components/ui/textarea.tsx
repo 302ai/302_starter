@@ -6,7 +6,7 @@ export interface TextareaProps
   extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {}
 
 const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
-  ({ className, ...props }, ref) => {
+  ({ className, "aria-label": ariaLabel, "aria-describedby": ariaDescribedby, ...props }, ref) => {
     return (
       <textarea
         className={cn(
@@ -14,6 +14,9 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           className
         )}
         ref={ref}
+        aria-label={ariaLabel || props.placeholder || "Text area"}
+        aria-invalid={props["aria-invalid"] || undefined}
+        aria-describedby={ariaDescribedby}
         {...props}
       />
     );
