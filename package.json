@@ -10,8 +10,8 @@
     "prepare": "husky",
     "commitlint": "commitlint",
     "commit": "git-cz",
-    "test": "jest",
-    "test:watch": "jest --watch"
+    "test": "cross-env NODE_ENV=development jest",
+    "test:watch": "cross-env NODE_ENV=development jest --watch"
   },
   "dependencies": {
     "@radix-ui/react-alert-dialog": "^1.1.2",
@@ -58,13 +58,16 @@
     "@radix-ui/react-slot": "^1.1.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.1.0",
+    "@testing-library/user-event": "^14.5.2",
     "@types/file-saver": "^2.0.7",
     "@types/jest": "^29.5.14",
     "@types/node": "^20.16.14",
     "@types/react": "^18.3.11",
     "@types/react-dom": "^18.3.1",
+    "@types/testing-library__jest-dom": "^6.0.0",
     "class-variance-authority": "^0.7.0",
     "commitizen": "^4.3.1",
+    "cross-env": "^7.0.3",
     "eslint": "^8.57.1",
     "eslint-config-next": "14.2.15",
     "eslint-config-prettier": "^9.1.0",

@@ -29,14 +29,17 @@
         "./public/*"
       ]
     },
-    "target": "ES2017"
+    "target": "ES2017",
+    "types": ["node", "jest", "@testing-library/jest-dom"],
+    "allowUnusedLabels": false,
+    "allowUnreachableCode": false
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "src/types/**/*.d.ts"
+    "types/**/*.d.ts"
   ],
   "exclude": [
     "node_modules"
