@@ -1,0 +1,33 @@
+{
+  "home": {
+    "title": "ホーム"
+  },
+  "auth": {
+    "title": "認証"
+  },
+  "calculator": {
+    "title": "科学電卓",
+    "memory": {
+      "mc": "メモリクリア",
+      "mr": "メモリ呼出",
+      "mPlus": "メモリ加算",
+      "mMinus": "メモリ減算"
+    },
+    "scientific": {
+      "sin": "正弦",
+      "cos": "余弦",
+      "tan": "正接",
+      "log": "対数",
+      "exp": "指数",
+      "sqrt": "平方根"
+    },
+    "operators": {
+      "add": "加算",
+      "subtract": "減算",
+      "multiply": "乗算",
+      "divide": "除算",
+      "equals": "等号",
+      "clear": "クリア"
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "home": {
+    "title": "Home"
+  },
+  "auth": {
+    "title": "Authentication"
+  },
+  "calculator": {
+    "title": "Scientific Calculator",
+    "memory": {
+      "mc": "Memory Clear",
+      "mr": "Memory Recall",
+      "mPlus": "Memory Add",
+      "mMinus": "Memory Subtract"
+    },
+    "scientific": {
+      "sin": "Sine",
+      "cos": "Cosine",
+      "tan": "Tangent",
+      "log": "Logarithm",
+      "exp": "Exponential",
+      "sqrt": "Square Root"
+    },
+    "operators": {
+      "add": "Add",
+      "subtract": "Subtract",
+      "multiply": "Multiply",
+      "divide": "Divide",
+      "equals": "Equals",
+      "clear": "Clear"
+    }
+  }
+}

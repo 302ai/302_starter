@@ -1,0 +1,33 @@
+{
+  "home": {
+    "title": "首页"
+  },
+  "auth": {
+    "title": "认证"
+  },
+  "calculator": {
+    "title": "科学计算器",
+    "memory": {
+      "mc": "清除内存",
+      "mr": "读取内存",
+      "mPlus": "内存加",
+      "mMinus": "内存减"
+    },
+    "scientific": {
+      "sin": "正弦",
+      "cos": "余弦",
+      "tan": "正切",
+      "log": "对数",
+      "exp": "指数",
+      "sqrt": "平方根"
+    },
+    "operators": {
+      "add": "加",
+      "subtract": "减",
+      "multiply": "乘",
+      "divide": "除",
+      "equals": "等于",
+      "clear": "清除"
+    }
+  }
+}
