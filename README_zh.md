@@ -1,8 +1,12 @@
-# 302 Starter 🚀
+# <p align="center">🤖 302 Starter🚀✨</p>
 
-[English](./README.md) | 简体中文 | [日本語](./README_ja.md)
+<p align="center"><code>302 Starter</code>是一个基于 Next.js 14 的现代化 Web 应用程序启动模板，集成了最新的前端技术栈和最佳实践。</p>
 
-一个基于 Next.js 14 的现代化 Web 应用程序启动模板，集成了最新的前端技术栈和最佳实践。
+<p align="center"><a href="https://302.ai/" target="blank"><img src="https://file.302.ai/gpt/imgs/github/20250102/72a57c4263944b73bf521830878ae39a.png" /></a></p >
+
+<p align="center"><a href="README_zh.md">中文</a> | <a href="README.md">English</a> | <a href="README_ja.md">日本語</a></p>
+
+![](docs/302_Starter.jpg)
 
 ## ✨ 302.AI介绍 ✨
 [302.AI](https://302.ai)是一个按需付费的AI应用平台，为用户解决AI用于实践的最后一公里问题。

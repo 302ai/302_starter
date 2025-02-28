@@ -1,8 +1,14 @@
-# 302 Starter 🚀
 
-English | [简体中文](./README_zh.md) | [日本語](./README_ja.md)
 
-A modern web application starter template based on Next.js 14, integrating the latest frontend technology stack and best practices.
+# <p align="center">🤖 302 Starter🚀✨</p>
+
+<p align="center"><code>302 Starter</code> is a modern web application starter template based on Next.js 14, integrating the latest frontend tech stack and best practices.</p>
+
+<p align="center"><a href="https://302.ai/en/" target="blank"><img src="https://file.302.ai/gpt/imgs/github/20250102/72a57c4263944b73bf521830878ae39a.png" /></a></p >
+
+<p align="center"><a href="README_zh.md">中文</a> | <a href="README.md">English</a> | <a href="README_ja.md">日本語</a></p>
+
+![](docs/302_Starter.jpg)
 
 ## ✨ About 302.AI ✨
 [302.AI](https://302.ai) is a pay-as-you-go AI application platform, bridging the gap between AI capabilities and practical implementation.
